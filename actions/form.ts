@@ -165,19 +165,43 @@ export async function PublishForm(id: number) {
     });
 }
 
-export async function GetFormWithSubmissions(id: number){
+export async function GetFormWithSubmissions(id: number) {
     const user = await currentUser();
-    if(!user){
+    if (!user) {
         throw new UserNotFoundErr();
     }
 
     return await prisma.form.findUnique({
-        where:{
+        where: {
             userId: user?.id,
             id
         },
-        include:{
+        include: {
             FormSubmissions: true
         }
     });
+}
+
+export async function DeleteForm(id: number) {
+    const user = await currentUser();
+    if (!user) {
+        throw new UserNotFoundErr();
+    }
+
+    const form = await prisma.form.findUnique({
+        where: { id, userId: user.id }
+    });
+
+    if (!form) {
+        throw new Error("Form not found");
+    }
+
+    if(form.published) throw new Error("Cannot delete a publish form!");
+
+    return await prisma.form.delete({
+        where: {
+            id: form.id,
+            userId: user.id
+        }
+    })
 }
