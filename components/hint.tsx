@@ -1,0 +1,29 @@
+import React from "react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/tooltip";
+
+interface HintProps {
+    label: string;
+    children: React.ReactNode;
+    asChild?: boolean;
+    side?: "left" | "right" | "top" | "bottom";
+    align?: "start" | "end" | "center";
+}
+
+export function Hint({
+    label, children, asChild, side, align
+}: HintProps) {
+    return (
+        <TooltipProvider>
+            <Tooltip delayDuration={0}>
+                <TooltipTrigger asChild={asChild}>{children}</TooltipTrigger>
+                <TooltipContent
+                    className="text-black bg-white"
+                    side={side}
+                    align={align}
+                >
+                    <p className="font-semibold">{label}</p>
+                </TooltipContent>
+            </Tooltip>
+        </TooltipProvider>
+    )
+}
