@@ -19,19 +19,18 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <ClerkProvider>
-      <html lang="en">
-        <body
-          className={`${inter.className} antialiased`}
-        >
+      <html lang="en" suppressHydrationWarning>
+        <body className={inter.className}>
           <ThemeProvider
             attribute="class"
             forcedTheme="dark"
-            storageKey="gamehub-theme">
+            storageKey="gamehub-theme"
+          >
             <Toaster theme="light" position="bottom-center" />
             {children}
           </ThemeProvider>

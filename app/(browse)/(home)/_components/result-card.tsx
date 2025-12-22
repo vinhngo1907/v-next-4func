@@ -10,7 +10,11 @@ interface ResultCardProps {
   thumbnailUrl: string | null;
   isLive: boolean;
 }
-export function ResultCard({ data }: { data: ResultCardProps }) {
+export function ResultCard({
+  data,
+}: {
+  data: ResultCardProps;
+}) {
   return (
     <Link href={`/${data.user.username}`}>
       <div className="h-full w-full space-y-4">
@@ -35,8 +39,9 @@ export function ResultCard({ data }: { data: ResultCardProps }) {
         </div>
       </div>
     </Link>
-  )
+  );
 }
+
 
 export function ResultCardSkeleton() {
   return (

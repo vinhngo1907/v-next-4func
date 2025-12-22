@@ -9,7 +9,6 @@ import { useSidebar } from "@/store/use-sidebar";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-
 export function UserItemSkeleton() {
   return (
     <li className="flex items-center gap-x-4 px-3 py-2">
