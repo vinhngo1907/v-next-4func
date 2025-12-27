@@ -1,68 +1,95 @@
-import { headers } from "next/headers";
 import { Webhook } from "svix";
-import { NextResponse } from "next/server";
+import { headers } from "next/headers";
+import { WebhookEvent } from "@clerk/nextjs/server";
+
 import { db } from "@/lib/db";
+// import { resetIngresses } from "@/actions/ingress";
 
 export async function POST(req: Request) {
-  const payload = await req.text();
+  const WEBHOOK_SECRET = process.env.CLERK_WEBHOOK_SECRET;
+
+  if (!WEBHOOK_SECRET) {
+    throw new Error(
+      "Please add CLERK_WEBHOOK_SECRET from Clerk Dashboard to .env or .env.local"
+    );
+  }
+
+  // Get the headers
   const headerPayload = await headers();
+  const svix_id = headerPayload.get("svix-id");
+  const svix_timestamp = headerPayload.get("svix-timestamp");
+  const svix_signature = headerPayload.get("svix-signature");
 
-  const svixId = headerPayload.get("svix-id");
-  const svixTimestamp = headerPayload.get("svix-timestamp");
-  const svixSignature = headerPayload.get("svix-signature");
-
-  if (!svixId || !svixTimestamp || !svixSignature) {
-    return new NextResponse("Missing svix headers", { status: 400 });
-  }
-
-  const wh = new Webhook(process.env.CLERK_WEBHOOK_SECRET!);
-
-  let event: any;
-
-  try {
-    event = wh.verify(payload, {
-      "svix-id": svixId,
-      "svix-timestamp": svixTimestamp,
-      "svix-signature": svixSignature,
+  // If there are no headers, error out
+  if (!svix_id || !svix_timestamp || !svix_signature) {
+    console.log("LOI NE")
+    return new Response("Error occured -- no svix headers", {
+      status: 400,
     });
+  }
+
+  // Get the body
+  const payload = await req.json();
+  const body = JSON.stringify(payload);
+  console.log({ payload })
+
+  // Create a new Svix instance with your secret.
+  const wh = new Webhook(WEBHOOK_SECRET);
+
+  let evt: WebhookEvent;
+
+  // Verify the payload with the headers
+  try {
+    evt = wh.verify(body, {
+      "svix-id": svix_id,
+      "svix-timestamp": svix_timestamp,
+      "svix-signature": svix_signature,
+    }) as WebhookEvent;
   } catch (err) {
-    console.error("Webhook verification failed", err);
-    return new NextResponse("Invalid signature", { status: 400 });
+    console.error("Error verifying webhook:", err);
+    return new Response("Error occured", {
+      status: 400,
+    });
   }
 
-  const { type, data } = event;
+  const eventType = evt.type;
 
-  // ===== HANDLE EVENTS =====
-  switch (type) {
-    case "user.created": {
-      await db.user.create({
-        data: {
-          externalUserId: data.id,
-          username: data.username ?? data.email_addresses[0].email_address,
-          imageUrl: data.image_url
+  if (eventType === "user.created") {
+    await db.user.create({
+      data: {
+        externalUserId: payload.data.id,
+        username: payload.data.username || payload.data.first_name,
+        imageUrl: payload.data.image_url,
+        stream: {
+          create: {
+            name: `${payload.data.username}'s stream`,
+          },
         },
-      });
-      break;
-    }
-
-    case "user.updated": {
-      await db.user.update({
-        where: { externalUserId: data.id },
-        data: {
-          username: data.username ?? data.email_addresses[0].email_address,
-          imageUrl: data.image_url,
-        },
-      });
-      break;
-    }
-
-    case "user.deleted": {
-      await db.user.delete({
-        where: { externalUserId: data.id },
-      });
-      break;
-    }
+      },
+    });
   }
 
-  return NextResponse.json({ received: true });
+  if (eventType === "user.updated") {
+    await db.user.update({
+      where: {
+        externalUserId: payload.data.id,
+      },
+      data: {
+        username: payload.data.username || payload.data.first_name,
+        imageUrl: payload.data.image_url,
+      },
+    });
+  }
+
+  if (eventType === "user.deleted") {
+    // await resetIngresses(payload.data.id);
+
+    await db.user.delete({
+      where: {
+        externalUserId: payload.data.id,
+      },
+    });
+  }
+
+  return new Response("", { status: 200 });
 }

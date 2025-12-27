@@ -14,5 +14,12 @@ export default clerkMiddleware((auth, req) => {
 });
 
 export const config = {
-  matcher: ["/((?!_next|.*\\..*).*)", "/(api|trpc)(.*)"],
+  matcher: [
+    /*
+     * Match all request paths except:
+     * - _next
+     * - static files
+     */
+    "/((?!_next|.*\\..*).*)",
+  ],
 };

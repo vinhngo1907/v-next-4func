@@ -7,6 +7,7 @@ export default function Home() {
      <div className="h-full p-8 max-w-screen-2xl mx-auto">
       <Suspense fallback={<ResultsSkeleton />}>
         <Results />
+        HOme PAHE
       </Suspense>
     </div>
   );

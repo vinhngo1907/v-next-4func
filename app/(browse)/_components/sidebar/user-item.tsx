@@ -20,8 +20,8 @@ export function UserItemSkeleton() {
   );
 }
 
-export function UserItem({ key, username, imageUrl, isLive }: {
-  key: string, username: string, imageUrl: string, isLive?: boolean
+export function UserItem({ username, imageUrl, isLive }: {
+  username: string, imageUrl: string, isLive?: boolean
 }) {
   const pathName = usePathname();
   const { collapsed } = useSidebar(state => state);
