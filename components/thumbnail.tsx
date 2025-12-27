@@ -6,9 +6,9 @@ import { UserAvatar } from "./user-avatar";
 
 interface ThumbnailProps {
 	src: string | null;
+	fallback: string;
 	isLive: boolean;
 	username: string;
-	fallback: string;
 }
 export function Thumbnail({
 	src,
@@ -20,14 +20,14 @@ export function Thumbnail({
 	if (!src) {
 		content = (
 			<div className="bg-background flex flex-col items-center justify-center gap-y-4 h-full w-full transition-transform group-hover:translate-x-2 group-hover:-translate-y-2 rounded-md">
-        <UserAvatar
-          size="lg"
-          showBadge
-          username={username}
-          imageUrl={fallback}
-          isLive={isLive}
-        />
-      </div>
+				<UserAvatar
+					size="lg"
+					showBadge
+					username={username}
+					imageUrl={fallback}
+					isLive={isLive}
+				/>
+			</div>
 		)
 	} else {
 		content = (
