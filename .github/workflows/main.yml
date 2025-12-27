@@ -22,23 +22,30 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      - name: Setup Node.js environment
-        uses: actions/setup-node@v2.1.5
-        
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
-
+      # Checkout source code
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
       # Runs a single command using the runners shell
       - name: Run a one-line script
         run: echo Hello, world!
-      
-      - name: NPM install
-        uses: bahmutov/npm-install@v1.6.0
-        with:
-          install-command: yarn
 
-      - name: Lint client
-        run: npm run lint
-      - name: Build client
-        run: npm run build
+      # Setup Node.js + Yarn cache
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'yarn'
+
+      # Install dependencies
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      # Lint
+      - name: Lint
+        run: yarn lint
+
+      # Build
+      - name: Build
+        run: yarn build
           
