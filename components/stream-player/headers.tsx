@@ -5,6 +5,7 @@ import { Skeleton } from "../ui/skeleton";
 import { UserAvatar, UserAvatarSkeleton } from "../user-avatar";
 import { Actions, ActionsSkeleton } from "./actions";
 import { UserIcon } from "lucide-react";
+import { VerifiedMark } from "../verified-mark";
 
 export function HeaderSkeleton() {
 	return (
@@ -47,7 +48,7 @@ export function Header(
 				<div className="spac-y-1">
 					<div className="flex items-center gap-x-2">
 						<h2 className="text-lg font-semibold">{hostName}</h2>
-						{/* <VerifiedMark /> */}
+						<VerifiedMark />
 					</div>
 					<p className="text-sm font-semibold">{name}</p>
 					{isLive ? (

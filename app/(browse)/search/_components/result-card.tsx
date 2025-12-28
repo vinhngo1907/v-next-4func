@@ -1,7 +1,9 @@
 import { Thumbnail, ThumbnailSkeleton } from "@/components/thumbnail";
 import { Skeleton } from "@/components/ui/skeleton";
+import { VerifiedMark } from "@/components/verified-mark";
 import { User } from "@prisma/client";
 import Link from "next/link";
+import { formatDistanceToNow } from "date-fns";
 
 interface ResultCardProps {
 	id: string;
@@ -29,13 +31,13 @@ export function ResultCard({ data, }: { data: ResultCardProps }) {
 						<p className="font-bold text-lg cursor-pointer hover:text-blue-500">
 							{data.user.username}
 						</p>
-						{/* <VerifiedMark /> */}
+						<VerifiedMark />
 					</div>
 					<p className="text-sm text-muted-foreground">{data.name}</p>
 					<p className="text-sm text-muted-foreground">
-						{/* {formatDistanceToNow(new Date(data.updatedAt), {
-              addSuffix: true,
-            })} */}
+						{formatDistanceToNow(new Date(data.updatedAt), {
+							addSuffix: true,
+						})}
 					</p>
 				</div>
 			</div>

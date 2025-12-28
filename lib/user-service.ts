@@ -2,7 +2,7 @@ import { db } from "./db";
 
 export const getUserByUsername = async function (username: string) {
   const user = await db.user.findUnique({
-    where: { username: "henryngo" },
+    where: { username },
     select: {
       id: true,
       externalUserId: true,
