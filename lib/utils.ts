@@ -20,7 +20,9 @@ export function stringToColor(str: string) {
   return color;
 }
 
-export function normalizeUsername(data: any)  {
+export function normalizeUsername(data: {
+  username?: string, first_name?: string, last_name?: string
+}) {
   if (data.username) {
     return data.username.toLowerCase().trim();
   }
