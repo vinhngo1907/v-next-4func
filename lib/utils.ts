@@ -29,6 +29,7 @@ export function normalizeUsername(data: {
 
   const firstName = data.first_name?.toLowerCase().trim() ?? "";
   const lastName = data.last_name?.toLowerCase().trim() ?? "";
+  if (!firstName && !lastName) return "user";
 
   return `${firstName}${lastName}`;
 };

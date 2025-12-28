@@ -2,8 +2,6 @@
 
 import React from "react";
 import { VerifiedMark } from "../verified-mark";
-
-
 // import { BioModal } from "./bio-modal";
 
 export function AboutCard({

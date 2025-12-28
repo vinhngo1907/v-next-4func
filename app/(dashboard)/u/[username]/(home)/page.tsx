@@ -3,11 +3,9 @@ import { currentUser } from "@clerk/nextjs/server";
 import { StreamPlayer } from "@/components/stream-player";
 import { getUserByUsername } from "@/lib/user-service";
 
-export default async function CreatorPage({
-  params: { username },
-}: {
-  params: { username: string };
-}) {
+export default async function CreatorPage(props: { params: { username: string } }) {
+ const { params } = props; 
+  const {username} = await params;
   const externalUser = await currentUser();
   const user = await getUserByUsername(username);
 

@@ -5,7 +5,9 @@ import { ChatListSkeleton } from "./chat-list";
 import { ChatHeaderSkeleton } from "./chat-header";
 import { ChatFormSkeleton } from "./chat-form";
 
-export function Chat() {
+export function Chat(
+    {viewerName, hostName, hostIdentity, isFollowing}:{viewerName: string, hostName: string, hostIdentity: string, isFollowing: boolean}
+) {
     return (
         <div className="flex flex-col bg-background border-l border-b pt-0 h-[calc(100vh-80px)]">
             Chat

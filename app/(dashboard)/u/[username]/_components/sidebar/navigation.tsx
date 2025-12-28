@@ -9,7 +9,6 @@ import { NavItem, NavItemSkeleton } from "./nav-item";
 export function Navigation() {
     const pathname = usePathname();
     const { user } = useUser();
-    // console.log({user})
     if (!user?.username || !user?.firstName) {
         return (
             <ul className="space-y-2">

@@ -30,7 +30,7 @@ export const getSelfByUsername = async (username: string) => {
   if (selfUsername !== username) {
     throw new Error("Forbidden");
   }
-
+  
   const user = await db.user.findUnique({
     where: { username },
   });
