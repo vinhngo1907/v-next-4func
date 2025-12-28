@@ -3,6 +3,7 @@ import { headers } from "next/headers";
 import { WebhookEvent } from "@clerk/nextjs/server";
 
 import { db } from "@/lib/db";
+import { normalizeUsername } from "@/lib/utils";
 // import { resetIngresses } from "@/actions/ingress";
 
 export async function POST(req: Request) {
@@ -22,7 +23,7 @@ export async function POST(req: Request) {
 
   // If there are no headers, error out
   if (!svix_id || !svix_timestamp || !svix_signature) {
-    console.log("LOI NE")
+    // console.log("LOI NE")
     return new Response("Error occured -- no svix headers", {
       status: 400,
     });
@@ -31,7 +32,8 @@ export async function POST(req: Request) {
   // Get the body
   const payload = await req.json();
   const body = JSON.stringify(payload);
-  console.log({ payload })
+  const username = normalizeUsername(payload.data);
+  // console.log({ payload })
 
   // Create a new Svix instance with your secret.
   const wh = new Webhook(WEBHOOK_SECRET);
@@ -55,10 +57,12 @@ export async function POST(req: Request) {
   const eventType = evt.type;
 
   if (eventType === "user.created") {
+    // const username = normalizeUsername(payload.data);
     await db.user.create({
       data: {
         externalUserId: payload.data.id,
-        username: payload.data.username || payload.data.first_name,
+        // username: payload.data.username || payload.data.first_name.toLowerCase(),
+        username: username,
         imageUrl: payload.data.image_url,
         stream: {
           create: {
@@ -70,13 +74,21 @@ export async function POST(req: Request) {
   }
 
   if (eventType === "user.updated") {
-    await db.user.update({
-      where: {
-        externalUserId: payload.data.id,
-      },
-      data: {
-        username: payload.data.username || payload.data.first_name,
+    await db.user.upsert({
+      where: { externalUserId: payload.data.id },
+      update: {
+        username,
         imageUrl: payload.data.image_url,
+      },
+      create: {
+        externalUserId: payload.data.id,
+        username,
+        imageUrl: payload.data.image_url,
+        stream: {
+          create: {
+            name: `${username}'s stream`,
+          },
+        },
       },
     });
   }

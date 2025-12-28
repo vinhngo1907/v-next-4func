@@ -19,3 +19,31 @@ export function stringToColor(str: string) {
 
   return color;
 }
+
+export function normalizeUsername(data: any)  {
+  if (data.username) {
+    return data.username.toLowerCase().trim();
+  }
+
+  const firstName = data.first_name?.toLowerCase().trim() ?? "";
+  const lastName = data.last_name?.toLowerCase().trim() ?? "";
+
+  return `${firstName}${lastName}`;
+};
+
+type UsernameInput = {
+  username?: string | null;
+  firstName?: string | null;
+  lastName?: string | null;
+};
+
+export const getNormalizedUsername = (user: UsernameInput) => {
+  if (user.username) {
+    return user.username.toLowerCase().trim();
+  }
+
+  const firstName = user.firstName?.toLowerCase().trim() ?? "";
+  const lastName = user.lastName?.toLowerCase().trim() ?? "";
+
+  return `${firstName}${lastName}`;
+};

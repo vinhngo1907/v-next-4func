@@ -5,6 +5,9 @@ import { useChatSidebar } from "@/store/use-chat-sidebar";
 import { LiveKitRoom } from "@livekit/components-react";
 import { useViewerToken } from "@/hooks/use-viewer-token";
 import { cn } from "@/lib/utils";
+import { ChatToggle } from "./chat-toggle";
+import { InfoCard } from "./info-card";
+import { Chat } from "./chat";
 
 export function StreamPlayerSkeleton() {
   return (
@@ -57,6 +60,7 @@ export function StreamPlayer({ user, stream, isFollowing }: {
         collapsed && (
           <div className="hidd lg:block fixed top-[100px] right-2 z-50">
             {/* chat toggle */}
+            <ChatToggle />
           </div>
         )
       }
@@ -78,13 +82,14 @@ export function StreamPlayer({ user, stream, isFollowing }: {
             name={stream.name}
             viewerIdentity={identity}
           />
-          {/*
           <InfoCard
             hostIdentity={user.id}
             viewerIdentity={identity}
             name={stream.name}
             thumbnailUrl={stream.thumbnailUrl}
           />
+          {/*
+          
           <AboutCard
             hostName={user.username}
             hostIdentity={user.id}
@@ -96,15 +101,15 @@ export function StreamPlayer({ user, stream, isFollowing }: {
 
         <div className={cn("col-span-1", collapsed && "hidden")}>
           {/* Chat */}
-          {/* <Chat
-            viewerName={name}
-            hostName={user.username}
-            hostIdentity={user.id}
-            isFollowing={isFollowing}
-            isChatEnabled={stream.isChatEnabled}
-            isChatDelayed={stream.isChatDelayed}
-            isChatFollowersOnly={stream.isChatFollowersOnly}
-          /> */}
+           <Chat
+            // viewerName={name}
+            // hostName={user.username}
+            // hostIdentity={user.id}
+            // isFollowing={isFollowing}
+            // isChatEnabled={stream.isChatEnabled}
+            // isChatDelayed={stream.isChatDelayed}
+            // isChatFollowersOnly={stream.isChatFollowersOnly}
+          />
         </div>
 
       </LiveKitRoom>

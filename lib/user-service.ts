@@ -2,7 +2,7 @@ import { db } from "./db";
 
 export const getUserByUsername = async function (username: string) {
   const user = await db.user.findUnique({
-    where: { username },
+    where: { username: "henryngo" },
     select: {
       id: true,
       externalUserId: true,
@@ -27,8 +27,6 @@ export const getUserByUsername = async function (username: string) {
       }
     }
   });
-
-  // if (!user) throw new Error("User not found");
 
   return user;
 }
