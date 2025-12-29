@@ -2,7 +2,7 @@ import React from "react";
 import { Hint } from "../hint";
 import { Maximize, Minimize } from "lucide-react";
 
-export function FulscreenControl(
+export function FullscreenControl(
     {
         isFullscreen, onToggle
     }: {
@@ -14,7 +14,10 @@ export function FulscreenControl(
     return (
         <div className="flex items-center gap-4">
             <Hint asChild label={label}>
-                <button className="text-white p-1.5 hover:bg-white/10 rounded-lg">
+                <button 
+                    className="text-white p-1.5 hover:bg-white/10 rounded-lg"
+                    onClick={onToggle}
+                >
                     <Icon className="h-5 w-5" />
                 </button>
             </Hint>

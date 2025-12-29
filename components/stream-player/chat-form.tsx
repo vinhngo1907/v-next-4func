@@ -1,6 +1,10 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { Skeleton } from "../ui/skeleton";
+import { Button } from "../ui/button";
+import { cn } from "@/lib/utils";
+import { ChatInfo } from "./chat-info";
+import { Input } from "../ui/input";
 
 export function ChatFormSkeleton() {
   return (
@@ -14,6 +18,59 @@ export function ChatFormSkeleton() {
   );
 }
 
-export function ChatForm() {
-  
+export function ChatForm({
+  value,
+  isDelayed,
+  isFollowersOnly,
+  isFollowing,
+  isHidden,
+  onChange,
+  onSubmit,
+}: {
+  value: string,
+  isDelayed: boolean, isFollowersOnly: boolean, isFollowing: boolean, isHidden: boolean,
+  onSubmit: () => void;
+  onChange: (value: string) => void;
+}) {
+
+  const [isDelayBlocked, setIsDelayBlocked] = useState(false);
+  const isFollowersOnlyAndNotFollowing = isFollowersOnly && !isFollowing;
+  const isDisabled =
+    isHidden || isDelayBlocked || isFollowersOnlyAndNotFollowing;
+
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+  }
+
+  if (isHidden) {
+    return null;
+  }
+
+  return (
+    <form
+      onSubmit={handleSubmit}
+      className="flex flex-col items-center gap-y-4 p-3"
+    >
+      <div className="w-full">
+        <ChatInfo isDelayed={isDelayed} isFollowersOnly={isFollowersOnly} />
+        <Input
+          onChange={(e) => onChange(e.target.value)}
+          value={value}
+          disabled={isDisabled}
+          placeholder="Send a message"
+          className={cn(
+            "border-white/10",
+            (isFollowersOnly || isDelayed) && "rounded-t-none border-t-0"
+          )}
+        />
+      </div>
+      <div className="ml-auto">
+        <Button type="submit" variant="primary" size="sm" disabled={isDisabled}>
+          Chat
+        </Button>
+      </div>
+    </form>
+  )
 }
