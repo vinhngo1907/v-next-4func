@@ -32,6 +32,7 @@ export async function POST(req: Request) {
   const payload = await req.json();
   const body = JSON.stringify(payload);
   const username = normalizeUsername(payload.data);
+  console.log({username})
   // console.log({ payload })
 
   // Create a new Svix instance with your secret.

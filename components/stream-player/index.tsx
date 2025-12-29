@@ -61,7 +61,6 @@ export function StreamPlayer({ user, stream, isFollowing }: {
       {
         collapsed && (
           <div className="hidd lg:block fixed top-[100px] right-2 z-50">
-            {/* chat toggle */}
             <ChatToggle />
           </div>
         )
@@ -100,15 +99,14 @@ export function StreamPlayer({ user, stream, isFollowing }: {
         </div>
 
         <div className={cn("col-span-1", collapsed && "hidden")}>
-          {/* Chat */}
            <Chat
             viewerName={name}
             hostName={user.username}
             hostIdentity={user.id}
             isFollowing={isFollowing}
-            // isChatEnabled={stream.isChatEnabled}
-            // isChatDelayed={stream.isChatDelayed}
-            // isChatFollowersOnly={stream.isChatFollowersOnly}
+            isChatEnabled={stream.isChatEnabled}
+            isChatDelayed={stream.isChatDelayed}
+            isChatFollowersOnly={stream.isChatFollowersOnly}
           />
         </div>
 

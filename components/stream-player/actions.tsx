@@ -8,29 +8,41 @@ import { Heart } from "lucide-react";
 import { Button } from "../ui/button";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { onFollow, onUnFollow } from "@/actions/follow";
 
 export function Actions(
-  { isHost, isFollowing, hostIdentity }: { isHost: boolean, isFollowing: boolean, hostIdentity: string }
+  { isHost, isFollowing, hostIdentity }:
+    { isHost: boolean, isFollowing: boolean, hostIdentity: string }
 ) {
   const { userId } = useAuth();
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const handleUnfollow = () => {
-    // startTransition(() => {
-    //   onUnfollow(hostIdentity)
-    //     .then((data) =>
-    //       toast.success(`You have unfollowed ${data.following.username}.`)
-    //     )
-    //     .catch(() => toast.error("Something went wrong while unfollowing."));
-    // });
+    startTransition(() => {
+      onUnFollow(hostIdentity)
+        .then((data) =>
+          toast.success(`You have unfollowed ${data.following.username}.`)
+        )
+        .catch(() => toast.error("Something went wrong while unfollowing."));
+    });
   };
 
   const handleFollow = () => {
-
+    startTransition(() => {
+      onFollow(hostIdentity)
+        .then((data) => {
+          toast.success(`You have followed ${data.following.username}.`)
+        })
+        .catch(() => toast.error("Something went wrong while unfollowing."));
+    })
   }
   const toggleFollow = () => {
-    if (!userId) return router.push("/sign-in");
+    if (!userId) {
+      return router.push("/sign-in");
+    }
+
     if (isHost) return;
+
     if (isFollowing) {
       handleUnfollow()
     } else {
@@ -51,7 +63,7 @@ export function Actions(
       />
       {isFollowing ? "Unfollow" : "Follow"}
     </Button>
-  )
+  );
 }
 export function ActionsSkeleton() {
   return <Skeleton className="h-10 w-full lg:w-24" />;

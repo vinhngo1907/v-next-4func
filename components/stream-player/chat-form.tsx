@@ -13,3 +13,7 @@ export function ChatFormSkeleton() {
     </div>
   );
 }
+
+export function ChatForm() {
+  
+}

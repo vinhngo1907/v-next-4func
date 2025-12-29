@@ -1,7 +1,10 @@
+"use client";
+
 import React from "react";
 import { Separator } from "../ui/separator";
 import { Pencil, PhoneForwarded } from "lucide-react";
 import Image from "next/image";
+import { InfoModal } from "./info-modal";
 
 export function InfoCard(
     { name,
@@ -13,6 +16,7 @@ export function InfoCard(
         thumbnailUrl: string | null, hostIdentity: string,
         viewerIdentity: string
     }) {
+       
     return (
         <div className="px-4">
             <div className="rounded-xl bg-background">
@@ -29,6 +33,7 @@ export function InfoCard(
                         </p>
                     </div>
                     {/* infomodal */}
+                   <InfoModal initialName={name} initialThumbnailUrl={thumbnailUrl}/>
                 </div>
                 <Separator />
                 <div className="p-4 lg:p-6 space-y-4">

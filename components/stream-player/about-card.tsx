@@ -2,7 +2,7 @@
 
 import React from "react";
 import { VerifiedMark } from "../verified-mark";
-// import { BioModal } from "./bio-modal";
+import { BioModal } from "./bio-modal";
 
 export function AboutCard({
   bio,
@@ -30,7 +30,7 @@ export function AboutCard({
             About {hostName}
             <VerifiedMark />
           </div>
-          {/* {isHost && <BioModal initialValue={bio} />} */}
+          {isHost && <BioModal initialValue={bio} />}
         </div>
         <div className="text-sm text-muted-foreground">
           <span className="font-semibold text-primary">{followedByCount}</span>{" "}
