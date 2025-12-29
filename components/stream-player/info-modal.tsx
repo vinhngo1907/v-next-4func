@@ -5,6 +5,15 @@ import { Button } from "../ui/button";
 import { Dialog, DialogHeader, DialogTitle, DialogTrigger, DialogContent, DialogClose } from "../ui/dialog";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
+import Image from "next/image";
+import { Hint } from "../hint";
+import { Trash } from "lucide-react";
+import { updateStream } from "@/actions/stream";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { ClientUploadedFileData } from "uploadthing/types";
+import { UploadDropzone } from "@uploadthing/react";
+import { OurFileRouter } from "@/app/api/uploadthing/core";
 
 export function InfoModal(
     { initialName, initialThumbnailUrl }: {
@@ -12,6 +21,7 @@ export function InfoModal(
     }
 ) {
     const [isPending, startTransition] = useTransition();
+    const router = useRouter()
     const closeRef = useRef<ElementRef<"button">>(null);
     const onSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -21,6 +31,18 @@ export function InfoModal(
 
     const onChange = (e: ChangeEvent<HTMLInputElement>) => {
         setName(e.target.value);
+    }
+
+    const onRemove = () => {
+        startTransition(() => {
+            updateStream({ thumbnailUrl: null })
+                .then(() => {
+                    toast.success("Stream thumbnail updated");
+                    setThumbnailUrl("");
+                    closeRef?.current?.click();
+                })
+                .catch(() => toast.error("Something went wrong"));
+        });
     }
     return (
         <Dialog>
@@ -42,6 +64,54 @@ export function InfoModal(
                             onChange={onChange}
                             value={name}
                         />
+                    </div>
+                    <div className="space-y-2">
+                        <Label>Thumnail</Label>
+                        {
+                            thumbnailUrl ? (
+                                <div className="relative aspect-video rounded-xl overflow-hidden border border-white/10">
+                                    <div className="absolute top-2 right-2 z-[10]">
+                                        <Hint label="Remove thumbnail" asChild side="left">
+                                            <Button
+                                                type="button"
+                                                disabled={isPending}
+                                                onClick={onRemove}
+                                                className="h-auto w-auto p-1.5"
+                                            >
+                                                <Trash className="h-4 w-4" />
+                                            </Button>
+                                        </Hint>
+                                    </div>
+                                    <Image
+                                        alt="Thumbnail"
+                                        src={thumbnailUrl}
+                                        fill
+                                        className="object-cover"
+                                    />
+                                </div>
+                            ) : (
+                                <div className="rounded-xl border outline-dashed outline-muted">
+                                    <UploadDropzone<OurFileRouter, "thumbnailUploader">
+                                        endpoint="thumbnailUploader"
+                                        appearance={{
+                                            label: { color: "#FFFFFF" },
+                                            allowedContent: { color: "#FFFFFF" },
+                                        }}
+                                        onClientUploadComplete={(res) => {
+                                            const url = res?.[0]?.url;
+                                            if (!url) return;
+
+                                            setThumbnailUrl(url);
+                                            router.refresh();
+                                            closeRef?.current?.click();
+                                        }}
+                                        onUploadError={(error) => {
+                                            console.error("Upload error:", error.message);
+                                        }}
+                                    />
+                                </div>
+                            )
+                        }
                     </div>
                     <div className="flex justify-between">
                         <DialogClose ref={closeRef} asChild>

@@ -33,7 +33,7 @@ export function Header(
 
 	const participants = useParticipants();
 	const participant = useRemoteParticipant(hostIdentity);
-	const isLive = !!participants;
+	const isLive = !!participant;
 	const participantCount = participants.length - 1;
 	const hostAsViewer = `host-${hostIdentity}`;
 	const isHost = hostAsViewer === viewerIdentity
@@ -56,7 +56,7 @@ export function Header(
 							<UserIcon className="h-4 w-4" />
 							<p>
 								{participantCount}{""}
-								{participantCount===1 ? "viewer" : "vierwers"}
+								{participantCount === 1 ? "viewer" : "viewers"}
 							</p>
 						</div>
 					) : (

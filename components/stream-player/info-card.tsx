@@ -32,7 +32,6 @@ export function InfoCard(
                             Maximize your visibility
                         </p>
                     </div>
-                    {/* infomodal */}
                    <InfoModal initialName={name} initialThumbnailUrl={thumbnailUrl}/>
                 </div>
                 <Separator />
