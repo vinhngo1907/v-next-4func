@@ -20,12 +20,39 @@ export const blockUser = async function (userId: string) {
     });
     if (existingBlock) throw new Error("User is alread blocked");
 
-    await db.block.create({
+    const blockedUser = await db.block.create({
         data: { blockedId: user.id, blockerId: self.id },
         include: { blocked: true }
     });
+
+    return blockedUser;
 }
 
+export const unBlockUser = async function (userId: string) {
+    const self = await getSelf();
+    const otherUser = await db.user.findUnique({ where: { id: userId } });
+    if (!otherUser) throw new Error("User not found");
+
+    if (self.id === otherUser.id) throw new Error("You can't unblock yourself");
+    const existingBlock = await db.block.findFirst({
+        where: {
+            blockerId: self.id,
+            blockedId: otherUser.id
+        },
+        include: { blocker: true }
+    });
+
+    if(!existingBlock) throw new Error("User is not blocked");
+
+    const unBlockedUser = await db.block.delete({
+        where:{
+           id: existingBlock.id
+        },
+        include: { blocked: true }
+    });
+
+    return unBlockedUser;
+}
 export const getBlockedUsers = async function () {
     const self = await getSelf();
     if (!self || !self.username) throw new Error("Unauthorized");

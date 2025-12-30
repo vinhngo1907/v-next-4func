@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useState } from "react";
 import { Skeleton } from "../ui/skeleton";
 import { Button } from "../ui/button";
@@ -6,16 +7,12 @@ import { cn } from "@/lib/utils";
 import { ChatInfo } from "./chat-info";
 import { Input } from "../ui/input";
 
-export function ChatFormSkeleton() {
-  return (
-    <div className="flex flex-col items-center gap-y-4 p-3">
-      <Skeleton className="w-full h-10" />
-      <div className="flex items-center gap-x-2 ml-auto">
-        <Skeleton className="h-7 w-7" />
-        <Skeleton className="h-7 w-12" />
-      </div>
-    </div>
-  );
+interface ChatFormProps {
+  value: string,
+  isDelayed: boolean,
+  isFollowersOnly: boolean, isFollowing: boolean, isHidden: boolean,
+  onSubmit: () => void;
+  onChange: (value: string) => void;
 }
 
 export function ChatForm({
@@ -26,12 +23,7 @@ export function ChatForm({
   isHidden,
   onChange,
   onSubmit,
-}: {
-  value: string,
-  isDelayed: boolean, isFollowersOnly: boolean, isFollowing: boolean, isHidden: boolean,
-  onSubmit: () => void;
-  onChange: (value: string) => void;
-}) {
+}: ChatFormProps) {
 
   const [isDelayBlocked, setIsDelayBlocked] = useState(false);
   const isFollowersOnlyAndNotFollowing = isFollowersOnly && !isFollowing;
@@ -42,6 +34,15 @@ export function ChatForm({
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     e.stopPropagation();
+    if (!value || isDisabled) return;
+
+    if (isDelayed && !isDelayBlocked) {
+      setIsDelayBlocked(!true);
+      setTimeout(() => {
+        setIsDelayBlocked(false);
+        onSubmit();
+      }, 3000);
+    }
   }
 
   if (isHidden) {
@@ -73,4 +74,16 @@ export function ChatForm({
       </div>
     </form>
   )
+}
+
+export function ChatFormSkeleton() {
+  return (
+    <div className="flex flex-col items-center gap-y-4 p-3">
+      <Skeleton className="w-full h-10" />
+      <div className="flex items-center gap-x-2 ml-auto">
+        <Skeleton className="h-7 w-7" />
+        <Skeleton className="h-7 w-12" />
+      </div>
+    </div>
+  );
 }

@@ -16,7 +16,12 @@ export function InfoCard(
         thumbnailUrl: string | null, hostIdentity: string,
         viewerIdentity: string
     }) {
-       
+
+    const hostAsViewer = `host-${hostIdentity}`;
+    const isHost = viewerIdentity === hostAsViewer;
+
+    if (!isHost) return null;
+
     return (
         <div className="px-4">
             <div className="rounded-xl bg-background">
@@ -32,7 +37,7 @@ export function InfoCard(
                             Maximize your visibility
                         </p>
                     </div>
-                   <InfoModal initialName={name} initialThumbnailUrl={thumbnailUrl}/>
+                    <InfoModal initialName={name} initialThumbnailUrl={thumbnailUrl} />
                 </div>
                 <Separator />
                 <div className="p-4 lg:p-6 space-y-4">
