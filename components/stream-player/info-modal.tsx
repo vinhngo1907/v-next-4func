@@ -11,8 +11,8 @@ import { Trash } from "lucide-react";
 import { updateStream } from "@/actions/stream";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { ClientUploadedFileData } from "uploadthing/types";
-import { UploadDropzone } from "@uploadthing/react";
+import { UploadDropzone } from "@/lib/uploadthing";
+// import { UploadDropzone } from "@uploadthing/react";
 import { OurFileRouter } from "@/app/api/uploadthing/core";
 
 export function InfoModal(
@@ -25,6 +25,15 @@ export function InfoModal(
     const closeRef = useRef<ElementRef<"button">>(null);
     const onSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+
+        startTransition(() => {
+            updateStream({ name })
+                .then(() => {
+                    toast.success("Stream updated");
+                    closeRef?.current?.click();
+                })
+                .catch(() => toast.error("Something went wrong"));
+        });
     }
     const [name, setName] = useState(initialName || "")
     const [thumbnailUrl, setThumbnailUrl] = useState(initialThumbnailUrl || "")
@@ -91,22 +100,20 @@ export function InfoModal(
                                 </div>
                             ) : (
                                 <div className="rounded-xl border outline-dashed outline-muted">
-                                    <UploadDropzone<OurFileRouter, "thumbnailUploader">
+                                    <UploadDropzone
                                         endpoint="thumbnailUploader"
                                         appearance={{
-                                            label: { color: "#FFFFFF" },
-                                            allowedContent: { color: "#FFFFFF" },
+                                            label: {
+                                                color: "#FFFFFF",
+                                            },
+                                            allowedContent: {
+                                                color: "#FFFFFF",
+                                            },
                                         }}
                                         onClientUploadComplete={(res) => {
-                                            const url = res?.[0]?.url;
-                                            if (!url) return;
-
-                                            setThumbnailUrl(url);
+                                            setThumbnailUrl(res?.[0]?.url);
                                             router.refresh();
                                             closeRef?.current?.click();
-                                        }}
-                                        onUploadError={(error) => {
-                                            console.error("Upload error:", error.message);
                                         }}
                                     />
                                 </div>

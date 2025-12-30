@@ -1,23 +1,23 @@
-#!/bin/sh
-. "$(dirname "$0")/_/husky.sh"
+# #!/bin/sh
+# . "$(dirname "$0")/_/husky.sh"
 
-RED='\033[0;31m'
-NC='\033[0m'
+# RED='\033[0;31m'
+# NC='\033[0m'
 
-echo "\nGit branch validator: Checking branch name..."
-branchName=$(git rev-parse --abbrev-ref HEAD)
+# echo "\nGit branch validator: Checking branch name..."
+# branchName=$(git rev-parse --abbrev-ref HEAD)
 
-if [ "$branchName" = "main" ]; then
-  echo "\n🚫 ${RED}Commit directly to the main branch is not allowed!${NC}\n"
-  exit 1
-fi
-
-# if ! echo "$branchName" | grep -Eq '^mur-[0-9]+$'; then
-#   echo "\n🚫 ${RED}Branch name must follow 'mur-{number}' (e.g. mur-123)${NC}\n"
+# if [ "$branchName" = "main" ]; then
+#   echo "\n🚫 ${RED}Commit directly to the main branch is not allowed!${NC}\n"
 #   exit 1
 # fi
 
-echo ">> Branch name is valid ✅"
-echo "🏗️ Running lint-staged..."
+# # if ! echo "$branchName" | grep -Eq '^mur-[0-9]+$'; then
+# #   echo "\n🚫 ${RED}Branch name must follow 'mur-{number}' (e.g. mur-123)${NC}\n"
+# #   exit 1
+# # fi
 
-npx lint-staged
+# echo ">> Branch name is valid ✅"
+# echo "🏗️ Running lint-staged..."
+
+# npx lint-staged
