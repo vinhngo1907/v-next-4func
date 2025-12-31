@@ -23,7 +23,7 @@ export function ResultCard({ data, }: { data: ResultCardProps }) {
 						src={data.thumbnailUrl}
 						fallback={data.user.imageUrl}
 						isLive={data.isLive}
-						username={data.user.username ?? "unknown"}
+						username={data.user.username}
 					/>
 				</div>
 				<div className="space-y-1">

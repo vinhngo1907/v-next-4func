@@ -1,16 +1,21 @@
-import { redirect } from "next/navigation"
-import { Suspense } from "react"
-import {Results} from "./_components/results"
+import { redirect } from "next/navigation";
+import { Suspense } from "react";
+import { Results } from "./_components/results";
 
-export default function SearchPage(
-    {searchParams} : {searchParams :{term?: string}}
-) {
-    if(!searchParams.term) return redirect("/")
-    return (
-        <div className="h-full p-8 max-w-screen-2xl mx-auto">
-            <Suspense>
-                <Results term={searchParams.term}/>
-            </Suspense>
-        </div>
-    )
+export default async function SearchPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ term?: string }>;
+}) {
+  const { term } = await searchParams;
+
+  if (!term) redirect("/");
+
+  return (
+    <div className="h-full p-8 max-w-screen-2xl mx-auto">
+      <Suspense>
+        <Results term={term} />
+      </Suspense>
+    </div>
+  );
 }
