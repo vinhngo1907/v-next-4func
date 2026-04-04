@@ -62,7 +62,7 @@ function NavSection({ label, items, pathname }: NavSectionProps) {
         <SidebarMenu>
           {items.map((item) => (
             <SidebarMenuItem key={item.title}>
-              <SidebarMenuButton
+              {/* <SidebarMenuButton
                 asChild={!!item.url}
                 isActive={
                   item.url
@@ -86,7 +86,7 @@ function NavSection({ label, items, pathname }: NavSectionProps) {
                     <span>{item.title}</span>
                   </>
                 )}
-              </SidebarMenuButton>
+              </SidebarMenuButton> */}
             </SidebarMenuItem>
           ))}
         </SidebarMenu>
