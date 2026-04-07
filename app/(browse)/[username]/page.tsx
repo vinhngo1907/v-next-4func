@@ -1,3 +1,4 @@
+import React from "react";
 import { StreamPlayer } from "@/components/stream-player";
 import { isBlockedByUser } from "@/lib/block-service";
 import { isFollowingUser } from "@/lib/follow-service";

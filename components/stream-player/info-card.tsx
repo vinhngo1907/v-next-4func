@@ -2,7 +2,7 @@
 
 import React from "react";
 import { Separator } from "../ui/separator";
-import { Pencil, PhoneForwarded } from "lucide-react";
+import { Pencil } from "lucide-react";
 import Image from "next/image";
 import { InfoModal } from "./info-modal";
 

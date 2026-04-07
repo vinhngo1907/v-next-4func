@@ -12,8 +12,6 @@ import { updateStream } from "@/actions/stream";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { UploadDropzone } from "@/lib/uploadthing";
-// import { UploadDropzone } from "@uploadthing/react";
-import { OurFileRouter } from "@/app/api/uploadthing/core";
 
 export function InfoModal(
     { initialName, initialThumbnailUrl }: {

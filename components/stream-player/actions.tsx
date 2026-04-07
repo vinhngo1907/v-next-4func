@@ -1,25 +1,43 @@
 "use client";
 
-import { useAuth } from "@clerk/nextjs";
-import { Skeleton } from "../ui/skeleton";
-import { useRouter } from "next/navigation";
-import { useTransition } from "react";
+import React, { useTransition } from "react";
 import { Heart } from "lucide-react";
-import { Button } from "../ui/button";
+import { useAuth } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { cn } from "@/lib/utils";
-import { onFollow, onUnFollow } from "@/actions/follow";
 
-export function Actions(
-  { isHost, isFollowing, hostIdentity }:
-    { isHost: boolean, isFollowing: boolean, hostIdentity: string }
-) {
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
+import { cn } from "@/lib/utils";
+import { onFollow, onUnfollow } from "@/actions/follow";
+
+export function Actions({
+  hostIdentity,
+  isFollowing,
+  isHost,
+}: {
+  hostIdentity: string;
+  isFollowing: boolean;
+  isHost: boolean;
+}) {
   const { userId } = useAuth();
   const router = useRouter();
+
   const [isPending, startTransition] = useTransition();
+
+  const handleFollow = () => {
+    startTransition(() => {
+      onFollow(hostIdentity)
+        .then((data) =>
+          toast.success(`You are now following ${data.following.username}.`)
+        )
+        .catch(() => toast.error("Something went wrong while following."));
+    });
+  };
+
   const handleUnfollow = () => {
     startTransition(() => {
-      onUnFollow(hostIdentity)
+      onUnfollow(hostIdentity)
         .then((data) =>
           toast.success(`You have unfollowed ${data.following.username}.`)
         )
@@ -27,15 +45,6 @@ export function Actions(
     });
   };
 
-  const handleFollow = () => {
-    startTransition(() => {
-      onFollow(hostIdentity)
-        .then((data) => {
-          toast.success(`You have followed ${data.following.username}.`)
-        })
-        .catch(() => toast.error("Something went wrong while unfollowing."));
-    })
-  }
   const toggleFollow = () => {
     if (!userId) {
       return router.push("/sign-in");
@@ -44,12 +53,12 @@ export function Actions(
     if (isHost) return;
 
     if (isFollowing) {
-      handleUnfollow()
+      handleUnfollow();
     } else {
-      handleFollow()
-    };
+      handleFollow();
+    }
+  };
 
-  }
   return (
     <Button
       disabled={isPending || isHost}
@@ -65,6 +74,7 @@ export function Actions(
     </Button>
   );
 }
+
 export function ActionsSkeleton() {
   return <Skeleton className="h-10 w-full lg:w-24" />;
 }

@@ -42,6 +42,8 @@ export function ChatForm({
         setIsDelayBlocked(false);
         onSubmit();
       }, 3000);
+    } else {
+      onSubmit();
     }
   }
 
