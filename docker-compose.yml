@@ -1,32 +1,32 @@
 version: '3.2'
 
-networks:
-  form_hub_network:
-    external: true
+# networks:
+  # form_hub_network:
+  #   external: true
 
 services:
-  postgres:
-    image: postgres:14-alpine
-    ports:
-      - 5432:5432
-    environment:
-      POSTGRES_DB: tiktik
-      POSTGRES_HOST_AUTH_METHOD: trust
-    networks:
-      - form_hub_network
-  webapp:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - 3000:3000
-    depends_on:
-      - postgres
-    environment:
-      DATABASE_URL: "postgresql://postgres@postgres:5432/tiktik"
-      NODE_ENV: production
-    networks:
-      - form_hub_network
+  # postgres:
+  #   image: postgres:14-alpine
+  #   ports:
+  #     - 5432:5432
+  #   environment:
+  #     POSTGRES_DB: tiktik
+  #     POSTGRES_HOST_AUTH_METHOD: trust
+  #   networks:
+  #     - form_hub_network
+  # webapp:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - 3000:3000
+  #   depends_on:
+  #     - postgres
+  #   environment:
+  #     DATABASE_URL: "postgresql://postgres@postgres:5432/tiktik"
+  #     NODE_ENV: production
+  #   networks:
+  #     - form_hub_network
   
   minio:
     image: minio/minio
